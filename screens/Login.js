@@ -1,6 +1,8 @@
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { initializeApp } from '@firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
@@ -14,17 +16,23 @@ const firebaseConfig = {
     measurementId: "G-WHN1M0P7KC"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Auth with persistence
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
 
 const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogin, handleAuthentication }) => {
   return (
     <>
       <View></View>
       <View style={styles.authContainer}>
-      <Image source={require('./../assets/images/newlogo.png')} style={styles.logo} />
-         <Text style={styles.title}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
+        <Image source={require('./../assets/images/newlogo.png')} style={styles.logo} />
+        <Text style={styles.title}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
 
-         <TextInput
+        <TextInput
           style={styles.input}
           value={email}
           onChangeText={setEmail}
@@ -50,7 +58,7 @@ const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogi
       </View>
     </>
   );
-}
+};
 
 const AuthenticatedScreen = ({ user, handleAuthentication }) => {
   return (
@@ -62,21 +70,20 @@ const AuthenticatedScreen = ({ user, handleAuthentication }) => {
   );
 };
 
-export default Login = () => {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
   const navigation = useNavigation();
 
-  const auth = getAuth(app);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
 
   const handleAuthentication = async () => {
     try {
@@ -91,7 +98,7 @@ export default Login = () => {
         } else {
           await createUserWithEmailAndPassword(auth, email, password);
           console.log('User created successfully!');
-          navigation.navigate('Home')
+          navigation.navigate('Home');
         }
       }
     } catch (error) {
@@ -100,7 +107,7 @@ export default Login = () => {
   };
 
   const handleGoogleSignIn = () => {
-  
+    // Add Google sign-in functionality here
   };
 
   return (
@@ -134,7 +141,7 @@ export default Login = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff', 
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -180,21 +187,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   googleContainer: {
-    marginTop: 50, 
+    marginTop: 50,
   },
   googleButton: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     backgroundColor: 'white',
     borderColor: '#747775',
     borderWidth: 1,
     borderRadius: 20,
-    paddingVertical: 10, 
-    paddingHorizontal: 20, 
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 20,
     marginBottom: 20,
-    width: 250, 
+    width: 250,
   },
   googleIcon: {
     height: 20,

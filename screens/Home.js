@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Searchbar } from 'react-native-paper';
-import { AntDesign } from '@expo/vector-icons';
 
 export default function Home() {
   const navigation = useNavigation();
@@ -30,9 +29,8 @@ export default function Home() {
             style={{ backgroundColor: 'white', color: 'black', width: '100%' }}
           />
           <TouchableOpacity onPress={() => console.log("Button pressed")} style={styles.iconContainer}>
-            <Image source={require('./../assets/images/reorder-horizontal.png')} style={{ width: 40, height: 40, paddingRight: 45 }} />
+            <Image source={require('./../assets/images/reorder-horizontal.png')} style={{ width: 40, height: 40,}} />
           </TouchableOpacity>
-          <AntDesign name="search1" size={30} color="black" style={styles.searchIcon} />
         </View>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -94,10 +92,6 @@ const styles = StyleSheet.create({
   iconImage: {
     width: 40,
     height: 40,
-  },
-  searchIcon: {
-    marginLeft: 10, 
-    marginRight: 10,
   },
   categoriesContainer: {
     backgroundColor: 'lightgreen',
