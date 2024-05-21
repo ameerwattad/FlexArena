@@ -1,85 +1,132 @@
-import React from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, StyleSheet, TouchableOpacity, ScrollView, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Searchbar } from 'react-native-paper';
+import Slideshow from 'react-native-image-slider-show';
+import Membership from './Membership';
 
 export default function Home() {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate('Home'); 
+    navigation.navigate('Home');
   };
+const handleNavigation = ()=>{
+  navigation.navigate('Membership')
+}
+  const images = [
+    { url: require('./../assets/images/SALES/creatine.png') },
+    { url: require('./../assets/images/SALES/vitamind3.png') },
+   
+  ];
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress} style={styles.touchable}>
-        <Image
-          source={require('../assets/images/HomeLogo.jpg')}
-          style={styles.logo}
-          resizeMode="cover"
-        />
-        <View style={styles.line} />
-      </TouchableOpacity>
-      
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <View style={styles.container}>
 
-      <View style={styles.blueContainer}>
-        <View style={[styles.searchContainer, { paddingRight: 80 }]}>
-          <Searchbar
-            placeholder="Search"
-            style={{ backgroundColor: 'white', color: 'black', width: '100%' }}
-          />
-          <TouchableOpacity onPress={() => console.log("Button pressed")} style={styles.iconContainer}>
-            <Image source={require('./../assets/images/reorder-horizontal.png')} style={{ width: 40, height: 40,}} />
+        <View style={styles.blueContainer}>
+          <View style={styles.searchContainer}>
+            <Searchbar
+              placeholder="Search"
+              style={styles.searchbar}
+            />
+            <TouchableOpacity onPress={() => console.log("Button pressed")} style={styles.iconContainer}>
+              <Image source={require('../assets/images/reorder-horizontal.png')} style={styles.iconImage} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.membershipContainer}>
+          <TouchableOpacity onPress={()=>{handleNavigation()}}>
+            <Image source={require('../assets/images/Membership/membership.png')} style={[styles.membershipImage, { height: 150 }]} />
           </TouchableOpacity>
         </View>
-      </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.categoriesContainer}>
-       
-          <Image source={require('./../assets/images/google_logo.png')} style={styles.carouselImage} />
-          <Image source={require('./../assets/images/google_logo.png')} style={styles.carouselImage} />
-          <Image source={require('./../assets/images/google_logo.png')} style={styles.carouselImage} />
-          <Image source={require('./../assets/images/google_logo.png')} style={styles.carouselImage} />
-          <Image source={require('./../assets/images/google_logo.png')} style={styles.carouselImage} />
-          <Image source={require('./../assets/images/google_logo.png')} style={styles.carouselImage} />
-          <Image source={require('./../assets/images/google_logo.png')} style={styles.carouselImage} />
-          <Image source={require('./../assets/images/google_logo.png')} style={styles.carouselImage} />
-        
+
+
+        <View style={styles.topContainer}>
+          <Text style={styles.specialPicksText}>Special Picks for You</Text>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
+            <View style={styles.topCategoriesContainer}>
+              {[
+                { name: 'Creatine', image: require('../assets/images/BestPicks/creatine.png') },
+                { name: 'Mass Gainer', image: require('../assets/images/BestPicks/mass-gainer.jpg') },
+                { name: 'Omega 3', image: require('../assets/images/BestPicks/omega3.webp') },
+                { name: 'Vitamin D3', image: require('../assets/images/BestPicks/vitamind3.webp') },
+                { name: 'Smart Watch', image: require('../assets/images/BestPicks/smartwatch.png') },
+              ].map((category, index) => (
+                <View key={index} style={styles.topCategoryItem}>
+                  <Image source={category.image} style={styles.topCarouselImage} />
+                  <Text style={styles.categoryText}>{category.name}</Text>
+                </View>
+              ))}
+            </View>
+          </ScrollView>
         </View>
-      </ScrollView>
-    </View>
+
+        {/* Integration of Slideshow component */}
+        <View style={styles.slideableContainer}>
+          <Slideshow
+            dataSource={images}
+            height={300}
+            arrowSize={20}
+            indicatorSize={20}
+            overlay={false}
+            indicatorColor="#CCCCCC"
+            indicatorSelectedColor="#FFFFFF"
+            containerStyle={styles.slideshowContainer}
+            titleStyle={styles.slideshowTitle}
+            captionStyle={styles.slideshowCaption}
+          />
+        </View>
+
+        <View style={styles.categoriesContainer}>
+          <Text style={styles.categoryHeaderText}>Shop by Category</Text>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
+            <View style={styles.categoryItemsContainer}>
+              {[
+                { name: 'Gym', image: require('../assets/images/Categories/gym.png') },
+                { name: 'Protein Powder', image: require('../assets/images/Categories/protein-powder.png') },
+                { name: 'T-shirt', image: require('../assets/images/Categories/tshirt.png') },
+                { name: 'Smartwatch', image: require('../assets/images/Categories/smartwatch.png') },
+                { name: 'Towels', image: require('../assets/images/Categories/towels.png') },
+              ].map((category, index) => (
+                <View key={index} style={styles.categoryItem}>
+                  <Image source={category.image} style={styles.carouselImage} />
+                  <Text style={styles.categoryText}>{category.name}</Text>
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    paddingTop: 0, 
+    paddingTop: 0,
+    backgroundColor: '#F1FAFE',
   },
   touchable: {
-    width: '100%', 
-    alignItems: 'center', 
-  },
-  logo: {
-    width: '100%', 
-    height: 140,
-    marginTop: -74, 
-  },
-  line: {
     width: '100%',
-    height: 5,
-    backgroundColor: '#333',
+    alignItems: 'center',
   },
   blueContainer: {
-    height: 80, 
-    backgroundColor: 'lightblue', 
+    height: 80,
+    backgroundColor: 'lightblue',
+    justifyContent: 'center',
   },
   searchContainer: {
-    padding: 10,
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 10,
   },
   searchbar: {
     backgroundColor: 'white',
@@ -87,21 +134,85 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconContainer: {
-    padding: 10, 
+    padding: 10,
   },
   iconImage: {
     width: 40,
     height: 40,
   },
-  categoriesContainer: {
-    backgroundColor: 'lightgreen',
-    height: 150,
-    marginTop: 20, 
+  topContainer: {
+    backgroundColor: 'white',
+    marginTop: 20,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  specialPicksText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 40,
+  },
+  categoryHeaderText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 40,
+  },
+  topCategoriesContainer: {
     flexDirection: 'row',
   },
-  carouselImage: {
+  topCategoryItem: {
+    alignItems: 'center',
+    marginHorizontal: 20,
+    width: 100, // Ensure all items have a consistent width
+  },
+  topCarouselImage: {
     width: 100,
     height: 100,
-    marginHorizontal: 10, 
+    borderRadius: 50,
+    marginBottom: 5, // Space between the image and the text
   },
-}); 
+  slideableContainer: {
+    backgroundColor: '#FFF',
+    marginTop: 20,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  slideshowContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  categoriesContainer: {
+    backgroundColor: 'white',
+    marginTop: 20,
+    marginBottom: 20, // Ensure spacing is consistent
+    paddingHorizontal: 10,
+  },
+  categoryItemsContainer: {
+    flexDirection: 'row', // Ensure items are displayed horizontally
+  },
+  categoryItem: {
+    alignItems: 'center',
+    marginHorizontal: 12, // Changed from 20 to 10 for category items
+    width: 100, // Ensure all items have a consistent width
+  },
+  carouselImage: {
+    width: 60,
+    height: 60,
+  },
+  categoryText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+// Styles for the Start Your Membership section
+// Styles for the Start Your Membership section
+membershipContainer: {
+  width: '100%',
+  marginBottom: 20,
+},
+membershipImage: {
+  width: '100%',
+  resizeMode: 'contain', // Ensure the image fits within the container without being cut off
+},
+});
+
